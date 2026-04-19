@@ -1,9 +1,3 @@
-/**
- * Hlavní funkce programu
- * @param {Object} dtoIn - vstupní data
- * @returns {Object} dtoOut - výstupní data (seznam zaměstnanců)
- */
-
 function main(dtoIn) {
   // 1. Načtení vstupu
   const { count, ageRange } = dtoIn;
@@ -127,11 +121,10 @@ const dtoIn = {
   count: 2,
   ageRange: {
     min: 20,
-    max: 60
+    max: 50
   }
 };
 
 const result = main(dtoIn);
-
 // výpis do konzole
 console.log(JSON.stringify(result, null, 2));
