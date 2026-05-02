@@ -8,7 +8,7 @@
  * @param {number} dtoIn.age.max
  * @returns {Array} pole zaměstnanců
  */
-export function main(dtoIn) {
+function main(dtoIn) {
   // 1. Načtení vstupu
   const { count, age } = dtoIn;
 
@@ -115,3 +115,4 @@ export function main(dtoIn) {
   // 4. výstup 
   return dtoOut;
 }
+module.exports = { main };
