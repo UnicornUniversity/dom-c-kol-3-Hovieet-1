@@ -1,103 +1,100 @@
-export function main(dtoIn) {
-  // 1. Načtení vstupu
-  const { count, age } = dtoIn;
+const MS_PER_YEAR = 365.25 * 24 * 60 * 60 * 1000;
 
-  // 2. Datové zdroje
-  const maleNames = [
-    "Jan", "Petr", "Josef", "Pavel", "Martin", "Tomáš", "Lukáš", "Karel",
-    "Milan", "Michal", "Jiří", "David", "Ondřej", "Filip", "Adam", "Radek",
-    "Marek", "Roman", "Jaroslav", "Václav", "Dominik", "Patrik", "Jakub",
-    "Matěj", "Štěpán"
-  ];
+const maleNames = [
+  "Jan", "Petr", "Josef", "Pavel", "Martin", "Tomáš", "Lukáš", "Karel",
+  "Milan", "Michal", "Jiří", "David", "Ondřej", "Filip", "Adam", "Radek",
+  "Marek", "Roman", "Jaroslav", "Václav", "Dominik", "Patrik", "Jakub",
+  "Matěj", "Štěpán"
+];
 
-  const femaleNames = [
-    "Jana", "Petra", "Marie", "Eva", "Anna", "Lenka", "Lucie", "Kateřina",
-    "Hana", "Alena", "Markéta", "Veronika", "Tereza", "Barbora", "Nikola",
-    "Simona", "Ivana", "Monika", "Zuzana", "Klára", "Adéla", "Kristýna",
-    "Denisa", "Eliška", "Karolína"
-  ];
+const femaleNames = [
+  "Jana", "Petra", "Marie", "Eva", "Anna", "Lenka", "Lucie", "Kateřina",
+  "Hana", "Alena", "Markéta", "Veronika", "Tereza", "Barbora", "Nikola",
+  "Simona", "Ivana", "Monika", "Zuzana", "Klára", "Adéla", "Kristýna",
+  "Denisa", "Eliška", "Karolína"
+];
 
-  const surnames = [
-    "Novák", "Svoboda", "Novotný", "Dvořák", "Černý", "Procházka", "Krejčí",
-    "Kučera", "Veselý", "Horák", "Němec", "Marek", "Pokorný", "Pospíšil",
-    "Hájek", "Jelínek", "Král", "Růžička", "Beneš", "Fiala", "Sedláček",
-    "Doležal", "Zeman", "Kolář", "Navrátil", "Čermák", "Urban", "Vaněk",
-    "Konečný", "Šimek", "Kratochvíl", "Bláha", "Tichý", "Kříž", "Pavlík",
-    "Mach", "Kopecký", "Malý", "Holub", "Čech", "Štěpánek", "Kadlec",
-    "Soukup", "Beran", "Havel", "Bartoš", "Polák", "Musil", "Křížek",
-    "Valenta"
-  ];
+const surnames = [
+  "Novák", "Svoboda", "Novotný", "Dvořák", "Černý", "Procházka", "Krejčí",
+  "Kučera", "Veselý", "Horák", "Němec", "Marek", "Pokorný", "Pospíšil",
+  "Hájek", "Jelínek", "Král", "Růžička", "Beneš", "Fiala", "Sedláček",
+  "Doležal", "Zeman", "Kolář", "Navrátil", "Čermák", "Urban", "Vaněk",
+  "Konečný", "Šimek", "Kratochvíl", "Bláha", "Tichý", "Kříž", "Pavlík",
+  "Mach", "Kopecký", "Malý", "Holub", "Čech", "Štěpánek", "Kadlec",
+  "Soukup", "Beran", "Havel", "Bartoš", "Polák", "Musil", "Křížek",
+  "Valenta"
+];
 
-  const workloads = [10, 20, 30, 40];
+const workloads = [10, 20, 30, 40];
 
-  function getRandomItem(arr) {
-    return arr[Math.floor(Math.random() * arr.length)];
-  }
+/**
+ * Vrátí náhodnou položku z pole.
+ */
+function getRandomItem(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
 
-  function getRandomAge(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-  }
+/**
+ * Vygeneruje náhodné datum narození podle věkového rozmezí.
+ */
+function generateBirthdate(minAge, maxAge) {
+  const now = Date.now();
 
-  function generateBirthdate(age) {
-    const today = new Date();
+  const oldestDate = now - maxAge * MS_PER_YEAR;
+  const youngestDate = now - minAge * MS_PER_YEAR;
 
-    const minDate = new Date(
-      today.getFullYear() - age - 1,
-      today.getMonth(),
-      today.getDate()
-    );
+  const randomTime =
+    oldestDate + Math.random() * (youngestDate - oldestDate);
 
-    const maxDate = new Date(
-      today.getFullYear() - age,
-      today.getMonth(),
-      today.getDate()
-    );
+  return new Date(randomTime).toISOString();
+}
 
-    const randomTime =
-      minDate.getTime() +
-      Math.random() * (maxDate.getTime() - minDate.getTime());
-
-   
-    return new Date(randomTime).toISOString();
-  }
-
-  function adjustSurnameByGender(surname, gender) {
-    if (gender === "female") {
-      if (surname.endsWith("ý")) {
-        return surname.slice(0, -1) + "á";
-      }
-      return surname + "ová";
+/**
+ * Upraví příjmení podle pohlaví.
+ */
+function adjustSurnameByGender(surname, gender) {
+  if (gender === "female") {
+    if (surname.endsWith("ý")) {
+      return surname.slice(0, -1) + "á";
     }
-    return surname;
+
+    return surname + "ová";
   }
 
+  return surname;
+}
+
+/**
+ * Vygeneruje jednoho zaměstnance.
+ */
+function generateEmployee(age) {
+  const gender = Math.random() < 0.5 ? "male" : "female";
+
+  const name =
+    gender === "male"
+      ? getRandomItem(maleNames)
+      : getRandomItem(femaleNames);
+
+  const surname = adjustSurnameByGender(getRandomItem(surnames), gender);
+
+  return {
+    name,
+    surname,
+    gender,
+    birthdate: generateBirthdate(age.min, age.max),
+    workload: getRandomItem(workloads)
+  };
+}
+
+/**
+ * Hlavní funkce pro generování zaměstnanců.
+ */
+export function main(dtoIn) {
   const dtoOut = [];
 
-  for (let i = 0; i < count; i++) {
-    const gender = Math.random() < 0.5 ? "male" : "female";
-
-    const name =
-      gender === "male"
-        ? getRandomItem(maleNames)
-        : getRandomItem(femaleNames);
-
-    let surname = getRandomItem(surnames);
-    surname = adjustSurnameByGender(surname, gender);
-
-    const randomAge = getRandomAge(age.min, age.max);
-    const birthdate = generateBirthdate(randomAge);
-
-    const workload = getRandomItem(workloads);
-
-    dtoOut.push({
-      name,
-      surname,
-      gender,
-      birthdate,
-      workload
-    });
+  for (let i = 0; i < dtoIn.count; i++) {
+    dtoOut.push(generateEmployee(dtoIn.age));
   }
 
- 
   return dtoOut;
 }
