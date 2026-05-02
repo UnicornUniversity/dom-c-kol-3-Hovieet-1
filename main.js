@@ -1,48 +1,56 @@
-function main(dtoIn) {
-  // 1. Načtení vstupu
-  const { count, ageRange } = dtoIn;
 
-  // 2. Datové zdroje (jména, příjmení, úvazky)
+/**
+ * Hlavní funkce pro generování zaměstnanců
+ * @param {Object} dtoIn
+ * @param {number} dtoIn.count - počet zaměstnanců
+ * @param {Object} dtoIn.age - věkové rozmezí
+ * @param {number} dtoIn.age.min
+ * @param {number} dtoIn.age.max
+ * @returns {Array} pole zaměstnanců
+ */
+export function main(dtoIn) {
+  // 1. Načtení vstupu
+  const { count, age } = dtoIn;
+
+  // 2. Datové zdroje
   const maleNames = [
-    "Jan", "Petr", "Josef", "Pavel", "Martin", "Tomáš", "Lukáš", "Karel",
-    "Milan", "Michal", "Jiří", "David", "Ondřej", "Filip", "Adam", "Radek",
-    "Marek", "Roman", "Jaroslav", "Václav", "Dominik", "Patrik", "Jakub",
-    "Matěj", "Štěpán"
+    "Jan","Petr","Josef","Pavel","Martin","Tomáš","Lukáš","Karel",
+    "Milan","Michal","Jiří","David","Ondřej","Filip","Adam","Radek",
+    "Marek","Roman","Jaroslav","Václav","Dominik","Patrik","Jakub",
+    "Matěj","Štěpán"
   ];
 
   const femaleNames = [
-    "Jana", "Petra", "Marie", "Eva", "Anna", "Lenka", "Lucie", "Kateřina",
-    "Hana", "Alena", "Markéta", "Veronika", "Tereza", "Barbora", "Nikola",
-    "Simona", "Ivana", "Monika", "Zuzana", "Klára", "Adéla", "Kristýna",
-    "Denisa", "Eliška", "Karolína"
+    "Jana","Petra","Marie","Eva","Anna","Lenka","Lucie","Kateřina",
+    "Hana","Alena","Markéta","Veronika","Tereza","Barbora","Nikola",
+    "Simona","Ivana","Monika","Zuzana","Klára","Adéla","Kristýna",
+    "Denisa","Eliška","Karolína"
   ];
 
   const surnames = [
-    "Novák", "Svoboda", "Novotný", "Dvořák", "Černý", "Procházka", "Krejčí",
-    "Kučera", "Veselý", "Horák", "Němec", "Marek", "Pokorný", "Pospíšil",
-    "Hájek", "Jelínek", "Král", "Růžička", "Beneš", "Fiala", "Sedláček",
-    "Doležal", "Zeman", "Kolář", "Navrátil", "Čermák", "Urban", "Vaněk",
-    "Konečný", "Šimek", "Kratochvíl", "Bláha", "Tichý", "Kříž", "Pavlík",
-    "Mach", "Kopecký", "Malý", "Holub", "Čech", "Štěpánek", "Kadlec",
-    "Soukup", "Beran", "Havel", "Bartoš", "Polák", "Musil", "Křížek",
+    "Novák","Svoboda","Novotný","Dvořák","Černý","Procházka","Krejčí",
+    "Kučera","Veselý","Horák","Němec","Marek","Pokorný","Pospíšil",
+    "Hájek","Jelínek","Král","Růžička","Beneš","Fiala","Sedláček",
+    "Doležal","Zeman","Kolář","Navrátil","Čermák","Urban","Vaněk",
+    "Konečný","Šimek","Kratochvíl","Bláha","Tichý","Kříž","Pavlík",
+    "Mach","Kopecký","Malý","Holub","Čech","Štěpánek","Kadlec",
+    "Soukup","Beran","Havel","Bartoš","Polák","Musil","Křížek",
     "Valenta"
   ];
 
   const workloads = [10, 20, 30, 40];
 
-  // 3. Pomocné funkce 
-
-  // Vrátí náhodnou položku z pole
+  /** Vrátí náhodnou položku z pole */
   function getRandomItem(arr) {
     return arr[Math.floor(Math.random() * arr.length)];
   }
 
-  // Vygeneruje náhodný věk v rozsahu
+  /** Vygeneruje náhodný věk */
   function getRandomAge(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
 
-  // Vygeneruje datum narození podle věku (ISO formát)
+  /** Vygeneruje birthdate z věku */
   function generateBirthdate(age) {
     const today = new Date();
 
@@ -65,7 +73,7 @@ function main(dtoIn) {
     return new Date(randomTime).toISOString();
   }
 
-  // Upraví příjmení podle pohlaví (ženská varianta)
+  /** Upravení příjmení podle pohlaví */
   function adjustSurnameByGender(surname, gender) {
     if (gender === "female") {
       if (surname.endsWith("ý")) {
@@ -76,31 +84,25 @@ function main(dtoIn) {
     return surname;
   }
 
-  // 4. Generování zaměstnanců 
+  // 3. Generování
   const dtoOut = [];
 
   for (let i = 0; i < count; i++) {
-    // Náhodné pohlaví
     const gender = Math.random() < 0.5 ? "male" : "female";
 
-    // Výběr jména podle pohlaví
     const name =
       gender === "male"
         ? getRandomItem(maleNames)
         : getRandomItem(femaleNames);
 
-    // Výběr a úprava příjmení
     let surname = getRandomItem(surnames);
     surname = adjustSurnameByGender(surname, gender);
 
-    // Generování věku a data narození
-    const age = getRandomAge(ageRange.min, ageRange.max);
-    const birthdate = generateBirthdate(age);
+    const randomAge = getRandomAge(age.min, age.max);
+    const birthdate = generateBirthdate(randomAge);
 
-    // Náhodný úvazek
     const workload = getRandomItem(workloads);
 
-    // Vytvoření zaměstnance
     dtoOut.push({
       name,
       surname,
@@ -110,21 +112,6 @@ function main(dtoIn) {
     });
   }
 
-  // 5. Výstup 
-  return {
-    dtoOut
-  };
+  // 4. výstup 
+  return dtoOut;
 }
-
-// TESTOVÁNÍ 
-const dtoIn = {
-  count: 2,
-  ageRange: {
-    min: 20,
-    max: 50
-  }
-};
-
-const result = main(dtoIn);
-// výpis do konzole
-console.log(JSON.stringify(result, null, 2));
