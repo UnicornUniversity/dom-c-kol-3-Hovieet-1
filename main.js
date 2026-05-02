@@ -1,4 +1,4 @@
-function main(dtoIn) {
+export function main(dtoIn) {
   // 1. Načtení vstupu
   const { count, age } = dtoIn;
 
@@ -57,8 +57,8 @@ function main(dtoIn) {
       minDate.getTime() +
       Math.random() * (maxDate.getTime() - minDate.getTime());
 
-    // 🔥 fix formátu
-    return new Date(randomTime).toISOString().split("T")[0];
+   
+    return new Date(randomTime).toISOString();
   }
 
   function adjustSurnameByGender(surname, gender) {
@@ -98,9 +98,6 @@ function main(dtoIn) {
     });
   }
 
-  // 🔥 vrací přímo pole
+ 
   return dtoOut;
 }
-
-// 🔥 export pro testy
-module.exports = { main };
